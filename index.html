@@ -1,0 +1,596 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MAYANK RCB 3D Cricket Universe</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e31837;--gold:#ffc94d;--bg:#080a12;--panel:#171a27}
+body{background:var(--bg);color:white;font-family:Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{
+ background:linear-gradient(120deg,#45000f,#c8102e,#090a12);
+ padding:22px;text-align:center;border-bottom:3px solid var(--gold);
+ position:relative;overflow:hidden
+}
+header:after{
+ content:"";position:absolute;width:300px;height:300px;
+ background:#ff304022;border-radius:50%;top:-180px;right:-60px
+}
+.logo{
+ width:80px;height:80px;border-radius:50%;border:3px solid gold;
+ background:linear-gradient(145deg,#e31837,#171717);
+ display:grid;place-items:center;margin:0 auto 10px;
+ font-size:30px;font-weight:900;
+ box-shadow:0 0 30px #ff234b
+}
+header h1{letter-spacing:2px;font-size:27px}
+header p{color:#ffe1a0;margin-top:7px}
+.owner{color:gold;margin-top:9px;font-weight:bold}
+nav{
+ display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+ background:#141622;padding:13px;position:sticky;top:0;z-index:10
+}
+nav button,.btn{
+ border:1px solid #76283a;background:#a70c29;color:white;
+ border-radius:8px;padding:11px 14px;font-weight:bold;
+ transition:.2s
+}
+nav button:hover,.btn:hover{background:#ed2445;transform:translateY(-2px)}
+section{display:none;max-width:1150px;margin:auto;padding:20px}
+section.active{display:block}
+h2{color:#ff526a;margin:15px 0}
+h3{margin:9px 0}
+p{line-height:1.6}
+.hero{
+ text-align:center;padding:35px 15px;border-radius:17px;
+ background:linear-gradient(130deg,#750d28,#171a27);
+ border:1px solid #9d354b;
+ box-shadow:0 15px 40px #0008
+}
+.hero h2{color:white;font-size:30px}
+.hero p{color:#ddd;margin:12px}
+.hero-icon{font-size:75px;margin:20px;filter:drop-shadow(0 0 15px gold)}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+ gap:13px;margin:15px 0
+}
+.card{
+ background:linear-gradient(145deg,#25202c,#121520);
+ border:1px solid #49303c;border-radius:13px;
+ padding:17px;text-align:center;transition:.3s
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px #e3183733}
+.icon{font-size:42px;margin:8px}
+.card small{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid #49303c;padding:17px;text-align:center;border-radius:12px}
+.stat strong{display:block;color:gold;font-size:24px;margin-bottom:6px}
+.info{color:#c2c3ce;line-height:1.8;margin:12px 0}
+.search{
+ width:100%;padding:13px;background:#191b29;color:white;
+ border:1px solid #66505b;border-radius:8px;margin:10px 0
+}
+.stadium{
+ text-align:center;border:2px solid gold;border-radius:15px;
+ background:linear-gradient(#101c39,#15402d);padding:20px;overflow:hidden
+}
+.score{font-size:43px;color:gold;font-weight:900;margin:12px;text-shadow:0 0 18px gold}
+.ground{
+ height:250px;max-width:700px;margin:22px auto;
+ border:8px solid #a9bd8b;border-radius:50%;position:relative;
+ overflow:hidden;perspective:700px;
+ background:repeating-linear-gradient(90deg,#26743a,#26743a 40px,#205f32 40px,#205f32 80px);
+ box-shadow:inset 0 0 40px #0008,0 0 25px #40ec7355;
+ animation:grass 4s infinite alternate
+}
+@keyframes grass{to{filter:brightness(1.18)}}
+.pitch{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:95px;height:150px;background:linear-gradient(90deg,#a58a65,#ddc49a,#a58a65);
+ display:grid;place-items:center;color:#25190e;font-weight:bold;border:2px solid white
+}
+.player3d{position:absolute;bottom:23px;font-size:48px;filter:drop-shadow(0 5px 3px #000)}
+.batter{left:30%;animation:swing 1.4s infinite}
+.fielder{right:25%;animation:float 2s infinite}
+@keyframes swing{0%,100%{transform:rotate(0)}50%{transform:rotate(-20deg)}}
+@keyframes float{50%{transform:translateY(-8px)}}
+.ball{
+ width:19px;height:19px;margin:12px auto;border-radius:50%;
+ background:radial-gradient(circle at 30% 30%,white,red 35%,#680000);
+ box-shadow:0 0 16px red
+}
+.ball.fly{animation:fly .8s ease-out}
+@keyframes fly{0%{transform:translate(0,0)}50%{transform:translate(110px,-100px) scale(1.5)}100%{transform:translate(210px,-145px) scale(.7)}}
+.gamebuttons{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:16px}
+.hit{font-size:20px;padding:16px 35px;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{box-shadow:0 0 25px red}}
+#message{padding:14px;border:1px solid gold;background:#191a25;color:gold;border-radius:9px;min-height:45px}
+.equipment{background:#1a1b29;border:1px solid gold;padding:17px;border-radius:10px;line-height:2}
+.table{width:100%;border-collapse:collapse;margin:15px 0;background:#151722}
+.table th,.table td{border:1px solid #41404c;padding:11px;text-align:left}
+.table th{background:#8e1028;color:white}
+.table tr:nth-child(even){background:#222331}
+footer{text-align:center;padding:25px;color:#999}
+.badge{color:gold;font-size:11px}
+@media(max-width:500px){
+ header h1{font-size:19px}
+ .ground{height:190px}
+ .score{font-size:34px}
+ nav button{font-size:11px;padding:10px}
+ section{padding:13px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">RCB</div>
+ <h1>MAYANK RCB UNIVERSE</h1>
+ <p>3D CRICKET GAME • TEAM • RECORDS • COLLECTION</p>
+ <div class="owner">👑 TEAM OWNER: MAYANK SINGH</div>
+</header>
+
+<nav>
+ <button onclick="show('home')">HOME</button>
+ <button onclick="show('team')">TEAM</button>
+ <button onclick="show('players')">PLAYERS</button>
+ <button onclick="show('game')">GAME</button>
+ <button onclick="show('shop')">SHOP</button>
+ <button onclick="show('info')">CRICKET INFO</button>
+ <button onclick="show('records')">RECORDS</button>
+ <button onclick="show('owner')">OWNER</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+ <div class="hero">
+  <h2>WELCOME TO MAYANK RCB</h2>
+  <p>Your own Royal Cricket Universe!</p>
+  <div class="hero-icon">🏏🏆</div>
+  <button class="btn" onclick="show('game')">PLAY CRICKET</button>
+  <button class="btn" onclick="show('shop')">EXPLORE SHOP</button>
+ </div>
+ <div class="stats">
+  <div class="stat"><strong>RCB</strong>TEAM</div>
+  <div class="stat"><strong id="homeCoins">500</strong>COINS</div>
+  <div class="stat"><strong>2</strong>OVERS MATCH</div>
+  <div class="stat"><strong>MAYANK</strong>OWNER</div>
+ </div>
+ <h2>EXPLORE UNIVERSE</h2>
+ <div class="grid">
+  <div class="card" onclick="show('team')"><div class="icon">🔴</div>Team Information</div>
+  <div class="card" onclick="show('players')"><div class="icon">🏏</div>Player Information</div>
+  <div class="card" onclick="show('game')"><div class="icon">🎮</div>Cricket Game</div>
+  <div class="card" onclick="show('shop')"><div class="icon">🛒</div>Collection Shop</div>
+  <div class="card" onclick="show('info')"><div class="icon">📚</div>Cricket Academy</div>
+  <div class="card" onclick="show('records')"><div class="icon">🏆</div>Records</div>
+ </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+ <h2>🔴 ROYAL CHALLENGERS BENGALURU</h2>
+ <div class="hero">
+  <div class="hero-icon">🔴🏏</div>
+  <h2>ROYAL CHALLENGERS BENGALURU</h2>
+  <p>Nickname: RCB</p>
+  <p>Home Ground: M. Chinnaswamy Stadium</p>
+  <p>City: Bengaluru, Karnataka, India</p>
+  <p>League: Indian Premier League (IPL)</p>
+ </div>
+ <h2>TEAM INFORMATION</h2>
+ <div class="grid">
+  <div class="card"><div class="icon">📅</div><h3>Founded</h3><small>2008</small></div>
+  <div class="card"><div class="icon">🏟️</div><h3>Home Ground</h3><small>Chinnaswamy Stadium</small></div>
+  <div class="card"><div class="icon">🎨</div><h3>Colours</h3><small>Red, Black and Gold</small></div>
+  <div class="card"><div class="icon">👑</div><h3>Game Owner</h3><small>Mayank Singh</small></div>
+ </div>
+ <h2>TEAM HISTORY</h2>
+ <p class="info">
+ RCB was founded in 2008 as one of the original IPL franchises.
+ The team represents Bengaluru in the Indian Premier League.
+ It has featured many famous international and Indian cricketers.
+ RCB won its first IPL championship in 2025.
+ </p>
+ <h2>HOME STADIUM</h2>
+ <div class="card">
+  <div class="icon">🏟️</div>
+  <h3>M. Chinnaswamy Stadium</h3>
+  <p class="info">Located in Bengaluru, Karnataka. Known for its lively atmosphere and exciting cricket matches.</p>
+ </div>
+</section>
+
+<!-- PLAYERS -->
+<section id="players">
+ <h2>🏏 RCB PLAYER DATABASE</h2>
+ <p class="info">Sample player database. Squad membership can change between IPL seasons.</p>
+ <input class="search" id="playerSearch" placeholder="Search player name..." oninput="searchPlayers()">
+ <div id="playerGrid" class="grid"></div>
+ <div id="playerDetail" class="card" style="display:none"></div>
+</section>
+
+<!-- GAME -->
+<section id="game">
+ <h2>🎮 MAYANK CRICKET MATCH</h2>
+ <div class="stadium">
+  <h3 style="color:gold">M. CHINNASWAMY STADIUM</h3>
+  <p>🙌 👏 🙌 👏 🙌 👏 🙌</p>
+  <div class="score"><span id="runs">0</span>/<span id="wickets">0</span></div>
+  <p>OVERS: <span id="overs">0.0</span> / 2</p>
+  <p>BATSMAN: <span id="batsman">Virat Kohli</span></p>
+  <p id="jerseyDisplay">👕 RCB Red</p>
+  <div class="ground">
+   <div class="pitch">🏏<br>PITCH</div>
+   <div class="player3d batter">🏃</div>
+   <div class="player3d fielder">🧍</div>
+  </div>
+  <div class="ball" id="ball"></div>
+  <p id="ballStatus">Ready for match!</p>
+  <div class="gamebuttons">
+   <button onclick="startMatch()">NEW MATCH</button>
+   <button class="hit" id="hitBtn" onclick="hitBall()" disabled>HIT 🏏</button>
+   <button onclick="nextBall()">NEXT BALL</button>
+  </div>
+  <div id="message">Start a new match!</div>
+ </div>
+ <div class="stats">
+  <div class="stat"><strong id="fours">0</strong>FOURS</div>
+  <div class="stat"><strong id="sixes">0</strong>SIXES</div>
+  <div class="stat"><strong id="balls">0</strong>BALLS</div>
+  <div class="stat"><strong id="rate">0</strong>RUN RATE</div>
+ </div>
+ <p class="info">Controls: Click NEXT BALL, then HIT or press SPACE. Score runs in a 2-over mini match.</p>
+</section>
+
+<!-- SHOP -->
+<section id="shop">
+ <h2>🛒 MAYANK CRICKET SHOP</h2>
+ <div class="stats">
+  <div class="stat"><strong id="coins">500</strong>🪙 COINS</div>
+  <div class="stat"><strong id="items">4</strong>UNLOCKED</div>
+ </div>
+ <h2>🏏 BAT COLLECTION</h2><div id="bats" class="grid"></div>
+ <h2>🔴 BALL COLLECTION</h2><div id="ballsShop" class="grid"></div>
+ <h2>👕 JERSEY COLLECTION</h2><div id="jerseys" class="grid"></div>
+ <h2>🏆 TROPHY COLLECTION</h2><div id="trophies" class="grid"></div>
+ <h2>MY EQUIPMENT</h2>
+ <div class="equipment" id="equipped"></div>
+</section>
+
+<!-- CRICKET INFORMATION -->
+<section id="info">
+ <h2>📚 CRICKET INFORMATION CENTER</h2>
+ <div class="grid">
+  <div class="card"><div class="icon">🏏</div><h3>Batting</h3><p class="info">Batting is the skill of scoring runs by hitting the ball. Common shots include drives, pulls, cuts and sweeps.</p></div>
+  <div class="card"><div class="icon">🎯</div><h3>Bowling</h3><p class="info">Bowlers deliver the ball to dismiss batters and restrict runs. Main types include pace, swing, seam and spin.</p></div>
+  <div class="card"><div class="icon">🧤</div><h3>Fielding</h3><p class="info">Fielders stop the ball, take catches and attempt run-outs. The wicketkeeper stands behind the stumps.</p></div>
+  <div class="card"><div class="icon">🏟️</div><h3>Pitch</h3><p class="info">A cricket pitch is 22 yards (20.12 metres) long between the wickets.</p></div>
+  <div class="card"><div class="icon">🪵</div><h3>Wickets</h3><p class="info">Each wicket has three stumps and two bails. A bowler aims to hit the stumps.</p></div>
+  <div class="card"><div class="icon">⚾</div><h3>Cricket Ball</h3><p class="info">Cricket balls have a stitched seam. Red, white and pink balls are used in different formats.</p></div>
+ </div>
+ <h2>CRICKET FORMATS</h2>
+ <table class="table">
+ <tr><th>Format</th><th>Overs per side</th><th>Details</th></tr>
+ <tr><td>Test</td><td>No fixed limit</td><td>Up to five days</td></tr>
+ <tr><td>ODI</td><td>50</td><td>One-day cricket</td></tr>
+ <tr><td>T20</td><td>20</td><td>Short format</td></tr>
+ <tr><td>IPL</td><td>20</td><td>T20 franchise league</td></tr>
+ </table>
+ <h2>IMPORTANT CRICKET RULES</h2>
+ <div class="card" style="text-align:left">
+  <p class="info">
+  1. Six runs: the ball crosses the boundary without bouncing.<br>
+  2. Four runs: the ball reaches the boundary after bouncing.<br>
+  3. Wide: an illegal delivery outside the batter's reach.<br>
+  4. No-ball: an illegal delivery, with penalty runs.<br>
+  5. Run-out: a batter is dismissed when a wicket is broken while outside the crease and the ball is in play.<br>
+  6. Over: six valid deliveries in standard cricket.
+  </p>
+ </div>
+ <h2>CRICKET EQUIPMENT</h2>
+ <table class="table">
+ <tr><th>Equipment</th><th>Purpose</th></tr>
+ <tr><td>Bat</td><td>Hit the ball</td></tr>
+ <tr><td>Ball</td><td>Used for bowling</td></tr>
+ <tr><td>Helmet</td><td>Head protection</td></tr>
+ <tr><td>Gloves</td><td>Hand protection and grip</td></tr>
+ <tr><td>Pads</td><td>Leg protection</td></tr>
+ <tr><td>Stumps</td><td>Form the wicket</td></tr>
+ </table>
+</section>
+
+<!-- RECORDS -->
+<section id="records">
+ <h2>🏆 CRICKET RECORDS CENTER</h2>
+ <div class="grid">
+  <div class="card"><div class="icon">🏆</div><h3>RCB IPL Title</h3><small>2025</small><p class="info">RCB won its maiden IPL title in 2025.</p></div>
+  <div class="card"><div class="icon">👑</div><h3>Famous Player</h3><small>Virat Kohli</small><p class="info">One of RCB's most celebrated batters.</p></div>
+  <div class="card"><div class="icon">🏟️</div><h3>Home Venue</h3><small>Bengaluru</small><p class="info">M. Chinnaswamy Stadium.</p></div>
+ </div>
+ <h2>MY GAME RECORDS</h2>
+ <div class="stats">
+  <div class="stat"><strong id="totalRuns">0</strong>Total Runs</div>
+  <div class="stat"><strong id="totalSixes">0</strong>Total Sixes</div>
+  <div class="stat"><strong id="totalMatches">0</strong>Matches</div>
+ </div>
+ <p class="info">Game records are collected from matches played in this browser.</p>
+</section>
+
+<!-- OWNER -->
+<section id="owner">
+ <div class="hero">
+  <div class="hero-icon">👑</div>
+  <h2>MAYANK SINGH</h2>
+  <p>OWNER • MAYANK RCB UNIVERSE</p>
+ </div>
+ <h2>OWNER DASHBOARD</h2>
+ <div class="stats">
+  <div class="stat"><strong id="ownerCoins">500</strong>Coins</div>
+  <div class="stat"><strong id="ownerMatches">0</strong>Matches</div>
+  <div class="stat"><strong id="ownerItems">4</strong>Items</div>
+ </div>
+ <div class="card">
+  <h3>About This Project</h3>
+  <p class="info">MAYANK RCB is a personal fan-made cricket game and information website. It is not an official IPL or RCB product.</p>
+  <button onclick="resetGame()">RESET GAME DATA</button>
+ </div>
+</section>
+
+<footer>
+MAYANK RCB UNIVERSE • FAN-MADE PROJECT • 2026
+</footer>
+
+<script>
+// PLAYER DATABASE
+const squad=[
+["Virat Kohli","India","Batter","Right-hand bat","Right-arm medium"],
+["Rajat Patidar","India","Batter","Right-hand bat","Part-time"],
+["Phil Salt","England","Wicketkeeper","Right-hand bat","—"],
+["Devdutt Padikkal","India","Batter","Left-hand bat","—"],
+["Jitesh Sharma","India","Wicketkeeper","Right-hand bat","—"],
+["Tim David","Australia","All-rounder","Right-hand bat","Right-arm off-break"],
+["Krunal Pandya","India","All-rounder","Left-hand bat","Left-arm spin"],
+["Romario Shepherd","West Indies","All-rounder","Right-hand bat","Right-arm fast"],
+["Jacob Bethell","England","All-rounder","Left-hand bat","Left-arm spin"],
+["Venkatesh Iyer","India","All-rounder","Left-hand bat","Right-arm medium"],
+["Josh Hazlewood","Australia","Bowler","Right-hand bat","Right-arm fast"],
+["Bhuvneshwar Kumar","India","Bowler","Right-hand bat","Right-arm medium"],
+["Yash Dayal","India","Bowler","Left-hand bat","Left-arm fast"],
+["Nuwan Thushara","Sri Lanka","Bowler","Right-hand bat","Right-arm fast"],
+["Jacob Duffy","New Zealand","Bowler","Right-hand bat","Right-arm fast"],
+["Rasikh Salam Dar","India","Bowler","Right-hand bat","Right-arm medium"],
+["Suyash Sharma","India","Bowler","Right-hand bat","Leg spin"],
+["Swapnil Singh","India","All-rounder","Left-hand bat","Slow left-arm"],
+["Abhinandan Singh","India","Bowler","Right-hand bat","Right-arm medium"],
+["Mangesh Yadav","India","All-rounder","Left-hand bat","Left-arm medium"],
+["Jordan Cox","England","Wicketkeeper","Right-hand bat","—"],
+["Satvik Deswal","India","All-rounder","—","—"],
+["Vicky Ostwal","India","All-rounder","Left-hand bat","Left-arm spin"],
+["Vihaan Malhotra","India","All-rounder","—","—"],
+["Kanishk Chouhan","India","All-rounder","—","—"]
+];
+
+function renderPlayers(list=squad){
+ const grid=document.getElementById("playerGrid");
+ grid.innerHTML=list.map(p=>`
+ <div class="card">
+ <div class="icon">🏏</div>
+ <h3>${p[0]}</h3>
+ <small>${p[2]}</small>
+ <p style="margin-top:10px">
+ <button onclick="playerInfo('${p[0]}')">DETAILS</button>
+ </p>
+ </div>`).join("");
+}
+function searchPlayers(){
+ const q=document.getElementById("playerSearch").value.toLowerCase();
+ renderPlayers(squad.filter(p=>p.join(" ").toLowerCase().includes(q)));
+}
+function playerInfo(name){
+ const p=squad.find(x=>x[0]===name);
+ const d=document.getElementById("playerDetail");
+ d.style.display="block";
+ d.innerHTML=`
+ <h2>🏏 ${p[0]}</h2>
+ <p class="info">Country: ${p[1]}<br>
+ Role: ${p[2]}<br>
+ Batting: ${p[3]}<br>
+ Bowling: ${p[4]}</p>
+ <button onclick="document.getElementById('playerDetail').style.display='none'">CLOSE</button>`;
+}
+renderPlayers();
+
+// NAVIGATION
+function show(id){
+ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ if(id==="shop")renderShop();
+ if(id==="owner"||id==="records")updateDashboard();
+}
+
+// GAME DATA
+let selected="Virat Kohli";
+let runs=0,wickets=0,balls=0,fours=0,sixes=0;
+let playing=false,waiting=false;
+let matches=0,totalRuns=0,totalSixes=0;
+
+// SAVE DATA
+let coins=500;
+let unlocked=["bats0","ballsShop0","jerseys0","trophies0"];
+let equipment={bat:"Classic Bat",ball:"Red Ball",jersey:"RCB Red",trophy:"Starter Cup"};
+
+function save(){
+ localStorage.setItem("mayankRCB",JSON.stringify({
+ coins,unlocked,equipment,matches,totalRuns,totalSixes
+ }));
+}
+function load(){
+ try{
+ const d=JSON.parse(localStorage.getItem("mayankRCB"));
+ if(d){
+ coins=d.coins??500;
+ unlocked=d.unlocked??unlocked;
+ equipment=d.equipment??equipment;
+ matches=d.matches??0;
+ totalRuns=d.totalRuns??0;
+ totalSixes=d.totalSixes??0;
+ }
+ }catch(e){}
+}
+load();
+
+function startMatch(){
+ runs=0;wickets=0;balls=0;fours=0;sixes=0;
+ playing=true;waiting=false;
+ updateScore();
+ document.getElementById("message").innerText="Match started! NEXT BALL दबाओ।";
+ document.getElementById("ballStatus").innerText="Ready!";
+ document.getElementById("hitBtn").disabled=true;
+ document.getElementById("batsman").innerText=selected;
+}
+function nextBall(){
+ if(!playing){
+ document.getElementById("message").innerText="पहले NEW MATCH दबाओ!";
+ return;
+ }
+ if(waiting){
+ document.getElementById("message").innerText="पहले current ball HIT करो!";
+ return;
+ }
+ if(balls>=12){finish();return;}
+ waiting=true;
+ document.getElementById("ballStatus").innerText="BALL COMING!";
+ document.getElementById("message").innerText="Quick! HIT the ball!";
+ document.getElementById("hitBtn").disabled=false;
+}
+function hitBall(){
+ if(!playing||!waiting)return;
+ waiting=false;
+ document.getElementById("hitBtn").disabled=true;
+ const ball=document.getElementById("ball");
+ ball.classList.remove("fly");
+ void ball.offsetWidth;
+ ball.classList.add("fly");
+ balls++;
+ let chance=Math.random(),result;
+ if(chance<.09){wickets++;result="OUT! ❌";}
+ else if(chance<.24){runs+=6;sixes++;result="SIX!!! 🔥";}
+ else if(chance<.45){runs+=4;fours++;result="FOUR! 🏏";}
+ else if(chance<.62){runs+=3;result="3 RUNS!";}
+ else if(chance<.79){runs+=2;result="2 RUNS!";}
+ else if(chance<.94){runs++;result="1 RUN!";}
+ else result="DOT BALL!";
+ document.getElementById("message").innerText=result;
+ document.getElementById("ballStatus").innerText="Ball completed!";
+ updateScore();
+ if(balls>=12||wickets>=10)finish();
+}
+function updateScore(){
+ document.getElementById("runs").innerText=runs;
+ document.getElementById("wickets").innerText=wickets;
+ document.getElementById("overs").innerText=Math.floor(balls/6)+"."+(balls%6);
+ document.getElementById("fours").innerText=fours;
+ document.getElementById("sixes").innerText=sixes;
+ document.getElementById("balls").innerText=balls;
+ document.getElementById("rate").innerText=balls?(runs/balls*6).toFixed(2):"0";
+}
+function finish(){
+ if(!playing)return;
+ playing=false;waiting=false;
+ matches++;
+ totalRuns+=runs;
+ totalSixes+=sixes;
+ const earned=runs+fours*5+sixes*10;
+ coins+=earned;
+ document.getElementById("hitBtn").disabled=true;
+ document.getElementById("message").innerText=
+ "🏆 INNINGS COMPLETE! "+runs+" RUNS! Earned "+earned+" coins.";
+ document.getElementById("ballStatus").innerText="MATCH OVER!";
+ save();
+ updateDashboard();
+}
+
+// COLLECTION SHOP
+const collections={
+ bats:[["Classic Bat","🏏",0],["Gold Bat","🥇",100],["Diamond Bat","💎",200],["Power Bat","⚡",300],["Legend Bat","🔥",450]],
+ ballsShop:[["Red Ball","🔴",0],["Gold Ball","🟡",100],["Blue Ball","🔵",150],["Diamond Ball","💎",250],["Fire Ball","🔥",350]],
+ jerseys:[["RCB Red","🔴",0],["Black Jersey","⚫",100],["Gold Jersey","🥇",200],["Champion Jersey","🏆",300],["Neon Jersey","💚",400]],
+ trophies:[["Starter Cup","🏆",0],["Gold Trophy","🥇",200],["Diamond Trophy","💎",400],["Champion Trophy","👑",600],["Legend Cup","⭐",800]]
+};
+function renderShop(){
+ for(const type of Object.keys(collections)){
+ const target=document.getElementById(type);
+ target.innerHTML=collections[type].map((item,i)=>{
+ const owned=unlocked.includes(type+i);
+ const equipped=Object.values(equipment).includes(item[0]);
+ return `<div class="card">
+ <div class="icon">${item[1]}</div>
+ <h3>${item[0]}</h3>
+ <small>${owned?"UNLOCKED":item[2]+" COINS"}</small><br>
+ <button onclick="buyItem('${type}',${i})">
+ ${owned?(equipped?"EQUIPPED":"EQUIP"):"BUY"}
+ </button>
+ </div>`;
+ }).join("");
+ }
+ document.getElementById("coins").innerText=coins;
+ document.getElementById("items").innerText=unlocked.length;
+ document.getElementById("homeCoins").innerText=coins;
+ document.getElementById("equipped").innerHTML=
+ "🏏 BAT: "+equipment.bat+
+ "<br>🔴 BALL: "+equipment.ball+
+ "<br>👕 JERSEY: "+equipment.jersey+
+ "<br>🏆 TROPHY: "+equipment.trophy;
+ document.getElementById("jerseyDisplay").innerText="👕 "+equipment.jersey;
+}
+function buyItem(type,i){
+ const item=collections[type][i],key=type+i;
+ if(!unlocked.includes(key)){
+ if(coins<item[2]){
+ alert("Not enough coins! Play matches to earn coins.");
+ return;
+ }
+ coins-=item[2];
+ unlocked.push(key);
+ }
+ if(type==="bats")equipment.bat=item[0];
+ if(type==="ballsShop")equipment.ball=item[0];
+ if(type==="jerseys")equipment.jersey=item[0];
+ if(type==="trophies")equipment.trophy=item[0];
+ save();
+ renderShop();
+ updateDashboard();
+}
+
+// DASHBOARD
+function updateDashboard(){
+ document.getElementById("totalRuns").innerText=totalRuns;
+ document.getElementById("totalSixes").innerText=totalSixes;
+ document.getElementById("totalMatches").innerText=matches;
+ document.getElementById("ownerCoins").innerText=coins;
+ document.getElementById("ownerMatches").innerText=matches;
+ document.getElementById("ownerItems").innerText=unlocked.length;
+ document.getElementById("homeCoins").innerText=coins;
+}
+function resetGame(){
+ if(confirm("Reset all saved Mayank RCB game data?")){
+ localStorage.removeItem("mayankRCB");
+ location.reload();
+ }
+}
+
+document.addEventListener("keydown",e=>{
+ if(e.code==="Space"&&document.getElementById("game").classList.contains("active")){
+ e.preventDefault();hitBall();
+ }
+});
+
+renderShop();
+updateDashboard();
+</script>
+</body>
+</html>
